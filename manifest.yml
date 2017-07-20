@@ -1,0 +1,8 @@
+---
+applications:
+  - name: mars-explorer
+    buildpack: java_buildpack
+    path: target/mars-explorer-0.1.0-SNAPSHOT.jar
+    random-route: true
+    memory: 256MB
+    disk: 128MB
