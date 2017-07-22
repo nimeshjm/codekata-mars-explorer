@@ -66,4 +66,12 @@ public class Rover extends RoverRequest {
 
         setPosition(new Coordinate(x, y));
     }
+
+    public void turnRight() {
+        setDirection(getDirection().turnRight());
+    }
+
+    public void turnLeft() {
+        setDirection(getDirection().turnLeft());
+    }
 }

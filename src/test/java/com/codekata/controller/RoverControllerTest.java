@@ -1,8 +1,6 @@
 package com.codekata.controller;
 
-import com.codekata.command.CommandParser;
-import com.codekata.command.MoveBackwardsCommand;
-import com.codekata.command.MoveForwardCommand;
+import com.codekata.command.*;
 import com.codekata.model.Coordinate;
 import com.codekata.model.Direction;
 import com.codekata.model.Rover;
@@ -29,7 +27,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 public class RoverControllerTest {
     private final RoverRepository roverRepository = mock(RoverRepository.class);
-    private CommandParser commandParser = new CommandParser(Arrays.asList(new MoveForwardCommand(), new MoveBackwardsCommand()));
+    private CommandParser commandParser = new CommandParser(Arrays.asList(new MoveForwardCommand(), new MoveBackwardsCommand(), new TurnRightCommand(), new TurnLeftCommand()));
     private final MarsRoverService roverService = new MarsRoverService(roverRepository, commandParser);
     private final RoverController sut = new RoverController(roverService);
 
@@ -121,6 +119,19 @@ public class RoverControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"commands\": [\"b\"]}"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void moveRoverAround() throws Exception {
+        Rover rover = new Rover(1, new Coordinate(0, 0), Direction.N);
+        when(roverRepository.get(any())).thenReturn(rover);
+
+        mockMvc.perform(post("/rovers/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"commands\": [\"f\", \"f\", \"r\", \"f\", \"l\", \"b\", \"b\"]}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.position.x", is(1)))
+                .andExpect(jsonPath("$.position.y", is(0)));
     }
 
     @Test

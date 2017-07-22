@@ -1,8 +1,6 @@
 package com.codekata.service;
 
-import com.codekata.command.CommandParser;
-import com.codekata.command.MoveBackwardsCommand;
-import com.codekata.command.MoveForwardCommand;
+import com.codekata.command.*;
 import com.codekata.exception.InvalidCommandException;
 import com.codekata.model.Coordinate;
 import com.codekata.model.Direction;
@@ -27,7 +25,7 @@ public class MarsRoverServiceTest {
     @Before
     public void setUp() throws Exception {
         roverRepository = mock(RoverRepository.class);
-        commandParser = new CommandParser(Arrays.asList(new MoveForwardCommand(), new MoveBackwardsCommand()));
+        commandParser = new CommandParser(Arrays.asList(new MoveForwardCommand(), new MoveBackwardsCommand(), new TurnRightCommand(), new TurnLeftCommand()));
         sut = new MarsRoverService(roverRepository, commandParser);
     }
 
@@ -101,8 +99,32 @@ public class MarsRoverServiceTest {
 
         Rover actual = sut.Run(1, commands);
 
+        assertEquals((Integer)2, actual.getPosition().getX());
         assertEquals((Integer)1, actual.getPosition().getY());
-        assertEquals((Integer)0, actual.getPosition().getX());
+    }
+
+    @Test
+    public void runCommandTurnRightOnRoverReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,1), Direction.S));
+        char[] commands = {'r'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)1, actual.getPosition().getY());
+        assertEquals((Integer)1, actual.getPosition().getX());
+        assertEquals(Direction.W, actual.getDirection());
+    }
+
+    @Test
+    public void runCommandTurnLeftOnRoverReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,1), Direction.W));
+        char[] commands = {'l'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)1, actual.getPosition().getY());
+        assertEquals((Integer)1, actual.getPosition().getX());
+        assertEquals(Direction.S, actual.getDirection());
     }
 
     @Test(expected = InvalidCommandException.class)
