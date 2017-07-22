@@ -27,8 +27,8 @@ public class MemoryRoverRepository implements RoverRepository {
     }
 
     @Override
-    public Rover add(Coordinate startingPoint, Direction initialDirection){
-        Rover rover = new Rover(deployedRovers.size() + 1, startingPoint, initialDirection);
+    public Rover add(Coordinate Position, Direction initialDirection){
+        Rover rover = new Rover(deployedRovers.size() + 1, Position, initialDirection);
         deployedRovers.add(rover);
 
         return rover;

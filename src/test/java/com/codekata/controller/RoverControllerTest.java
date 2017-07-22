@@ -4,7 +4,7 @@ import com.codekata.model.Coordinate;
 import com.codekata.model.Direction;
 import com.codekata.model.Rover;
 import com.codekata.repository.RoverRepository;
-import com.codekata.service.RoverService;
+import com.codekata.service.MarsRoverService;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 public class RoverControllerTest {
     private final RoverRepository roverRepository = mock(RoverRepository.class);
-    private final RoverService roverService = new RoverService(roverRepository);
+    private final MarsRoverService roverService = new MarsRoverService(roverRepository);
     private final RoverController sut = new RoverController(roverService);
 
     private final MockMvc mockMvc = standaloneSetup(this.sut).build();
@@ -60,7 +60,7 @@ public class RoverControllerTest {
 
     @Test
     public void getRoverOnPlanetReturnsCorrectRover() throws Exception {
-        Rover rover = new Rover(1, new Coordinate(1, 1), Direction.N);
+        Rover rover = new Rover(1, new Coordinate(1, 1), Direction.S);
         when(roverRepository.get(any())).thenReturn(rover);
 
         mockMvc.perform(get("/rovers/1"))
@@ -83,7 +83,38 @@ public class RoverControllerTest {
     public void createRoverIsSuccesful() throws Exception {
         mockMvc.perform(post("/rovers")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"startingPoint\":{\"x\":1,\"y\":1},\"direction\":\"W\"}"))
+                        .content("{\"Position\":{\"x\":1,\"y\":1},\"Direction\":\"W\"}"))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void moveRoverOnUnknownRoverThrowsError() throws Exception {
+        mockMvc.perform(post("/rovers/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"commands\": [\"f\"]}"))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    public void moveRoverForward() throws Exception {
+        Rover rover = new Rover(1, new Coordinate(1, 1), Direction.N);
+        when(roverRepository.get(any())).thenReturn(rover);
+
+        mockMvc.perform(post("/rovers/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"commands\": [\"f\"]}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void moveRoverInvalidDirectionReturnsBadRequest() throws Exception {
+        Rover rover = new Rover(1, new Coordinate(1, 1), Direction.N);
+        when(roverRepository.get(any())).thenReturn(rover);
+
+        mockMvc.perform(post("/rovers/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"commands\": [\"a\"]}"))
+                .andExpect(status().isBadRequest());
     }
 }

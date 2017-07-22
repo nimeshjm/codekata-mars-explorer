@@ -1,12 +1,23 @@
 package com.codekata.model;
 
 public class RoverRequest {
-    public Coordinate getStartingPoint() {
-        return startingPoint;
+    private Coordinate position;
+    private Direction direction;
+
+    public RoverRequest() {
     }
 
-    public void setStartingPoint(Coordinate startingPoint) {
-        this.startingPoint = startingPoint;
+    RoverRequest(Coordinate Position, Direction direction) {
+        this.position = Position;
+        this.direction = direction;
+    }
+
+    public Coordinate getPosition() {
+        return position;
+    }
+
+    public void setPosition(Coordinate Position) {
+        this.position = Position;
     }
 
     public Direction getDirection() {
@@ -14,17 +25,6 @@ public class RoverRequest {
     }
 
     public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-    private Coordinate startingPoint;
-    private Direction direction;
-
-    public RoverRequest() {
-    }
-
-    RoverRequest(Coordinate startingPoint, Direction direction) {
-        this.startingPoint = startingPoint;
         this.direction = direction;
     }
 }

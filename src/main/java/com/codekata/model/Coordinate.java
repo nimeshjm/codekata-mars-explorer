@@ -50,8 +50,4 @@ public class Coordinate {
     public int hashCode() {
         return Objects.hash(x, y);
     }
-
-    public static Coordinate Null() {
-        return new Coordinate(-1, -1);
-    }
 }

@@ -1,32 +1,18 @@
 package com.codekata.service;
 
+import com.codekata.exception.InvalidCommandException;
 import com.codekata.model.Coordinate;
 import com.codekata.model.Direction;
 import com.codekata.model.Rover;
-import com.codekata.repository.RoverRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class RoverService {
-    private final RoverRepository roverRepository;
+public interface RoverService {
+    Rover Create(Coordinate Position, Direction initialDirection);
 
-    @Autowired
-    public RoverService(RoverRepository roverRepository) {
-        this.roverRepository = roverRepository;
-    }
+    List<Rover> GetAll();
 
-    public Rover Create(Coordinate startingPoint, Direction initialDirection){
-        return roverRepository.add(startingPoint, initialDirection);
-    }
+    Rover Get(Integer id);
 
-    public List<Rover> GetAll() {
-        return roverRepository.get();
-    }
-
-    public Rover Get(Integer id) {
-        return roverRepository.get(id);
-    }
+    Rover Run(Integer id, char[] commands) throws InvalidCommandException;
 }
