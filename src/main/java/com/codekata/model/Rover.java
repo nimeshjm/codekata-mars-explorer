@@ -47,12 +47,22 @@ public class Rover extends RoverRequest {
         }
     }
 
-    public void Forward() {
+    public void moveForward() {
         Coordinate position = getPosition();
         Direction direction = getDirection();
 
         int x = position.getX() + direction.getX();
         int y = position.getY() + direction.getY();
+
+        setPosition(new Coordinate(x, y));
+    }
+
+    public void moveBackwards() {
+        Coordinate position = getPosition();
+        Direction direction = getDirection();
+
+        int x = position.getX() - direction.getX();
+        int y = position.getY() - direction.getY();
 
         setPosition(new Coordinate(x, y));
     }

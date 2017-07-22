@@ -89,6 +89,17 @@ public class MarsRoverServiceTest {
         assertEquals((Integer)1, actual.getPosition().getX());
     }
 
+    @Test
+    public void runCommandBackwardsOnRoverReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,1), Direction.W));
+        char[] commands = {'b'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)1, actual.getPosition().getY());
+        assertEquals((Integer)0, actual.getPosition().getX());
+    }
+
     @Test(expected = InvalidCommandException.class)
     public void runUnknownCommandOnRoverThrows() throws Exception, InvalidCommandException {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,1), Direction.N));

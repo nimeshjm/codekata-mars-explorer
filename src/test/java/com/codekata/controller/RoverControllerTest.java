@@ -108,6 +108,17 @@ public class RoverControllerTest {
     }
 
     @Test
+    public void moveRoverBackwards() throws Exception {
+        Rover rover = new Rover(1, new Coordinate(1, 1), Direction.N);
+        when(roverRepository.get(any())).thenReturn(rover);
+
+        mockMvc.perform(post("/rovers/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"commands\": [\"b\"]}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void moveRoverInvalidDirectionReturnsBadRequest() throws Exception {
         Rover rover = new Rover(1, new Coordinate(1, 1), Direction.N);
         when(roverRepository.get(any())).thenReturn(rover);

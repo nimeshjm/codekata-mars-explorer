@@ -2,9 +2,9 @@ package com.codekata.service;
 
 import com.codekata.model.Rover;
 
-public class MoveForwardCommand implements Command {
+public class MoveBackwardsCommand implements Command {
     @Override
     public void execute(Rover rover) {
-        rover.moveForward();
+        rover.moveBackwards();
     }
 }
