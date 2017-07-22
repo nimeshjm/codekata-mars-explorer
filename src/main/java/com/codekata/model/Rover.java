@@ -1,8 +1,8 @@
 package com.codekata.model;
 
+import com.codekata.command.Filter;
+import com.codekata.command.CommandParser;
 import com.codekata.exception.InvalidCommandException;
-import com.codekata.service.Command;
-import com.codekata.service.CommandParser;
 
 public class Rover extends RoverRequest {
     private Integer id;
@@ -36,9 +36,9 @@ public class Rover extends RoverRequest {
         super.setDirection(direction);
     }
 
-    public void runCommands(char[] commands) throws InvalidCommandException {
+    public void runCommands(CommandParser commandParser, char[] commands) throws InvalidCommandException {
         for (char c : commands) {
-            Command command = CommandParser.Parse(c);
+            Filter command = commandParser.Parse(c);
             if (command == null) {
                 throw new InvalidCommandException(String.valueOf(c));
             }

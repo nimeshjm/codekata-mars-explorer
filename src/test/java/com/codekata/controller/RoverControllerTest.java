@@ -1,5 +1,8 @@
 package com.codekata.controller;
 
+import com.codekata.command.CommandParser;
+import com.codekata.command.MoveBackwardsCommand;
+import com.codekata.command.MoveForwardCommand;
 import com.codekata.model.Coordinate;
 import com.codekata.model.Direction;
 import com.codekata.model.Rover;
@@ -10,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -25,7 +29,8 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 public class RoverControllerTest {
     private final RoverRepository roverRepository = mock(RoverRepository.class);
-    private final MarsRoverService roverService = new MarsRoverService(roverRepository);
+    private CommandParser commandParser = new CommandParser(Arrays.asList(new MoveForwardCommand(), new MoveBackwardsCommand()));
+    private final MarsRoverService roverService = new MarsRoverService(roverRepository, commandParser);
     private final RoverController sut = new RoverController(roverService);
 
     private final MockMvc mockMvc = standaloneSetup(this.sut).build();

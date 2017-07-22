@@ -1,5 +1,6 @@
 package com.codekata.service;
 
+import com.codekata.command.CommandParser;
 import com.codekata.exception.InvalidCommandException;
 import com.codekata.model.Coordinate;
 import com.codekata.model.Direction;
@@ -13,10 +14,12 @@ import java.util.List;
 @Service
 public class MarsRoverService implements RoverService {
     private final RoverRepository roverRepository;
+    private final CommandParser commandParser;
 
     @Autowired
-    public MarsRoverService(RoverRepository roverRepository) {
+    public MarsRoverService(RoverRepository roverRepository, CommandParser commandParser) {
         this.roverRepository = roverRepository;
+        this.commandParser = commandParser;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class MarsRoverService implements RoverService {
             return null;
         }
 
-        rover.runCommands(commands);
+        rover.runCommands(commandParser, commands);
 
         return rover;
     }

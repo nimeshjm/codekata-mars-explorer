@@ -1,5 +1,8 @@
 package com.codekata.service;
 
+import com.codekata.command.CommandParser;
+import com.codekata.command.MoveBackwardsCommand;
+import com.codekata.command.MoveForwardCommand;
 import com.codekata.exception.InvalidCommandException;
 import com.codekata.model.Coordinate;
 import com.codekata.model.Direction;
@@ -19,11 +22,13 @@ import static org.mockito.Mockito.*;
 public class MarsRoverServiceTest {
     private MarsRoverService sut;
     private RoverRepository roverRepository;
+    private CommandParser commandParser;
 
     @Before
     public void setUp() throws Exception {
         roverRepository = mock(RoverRepository.class);
-        sut = new MarsRoverService(roverRepository);
+        commandParser = new CommandParser(Arrays.asList(new MoveForwardCommand(), new MoveBackwardsCommand()));
+        sut = new MarsRoverService(roverRepository, commandParser);
     }
 
     @Test
