@@ -21,7 +21,7 @@ public class MoveBackwardsCommand implements Filter {
 
     @Override
     public void execute(Rover rover) {
-        rover.moveBackwards(config.getHeight(), config.getWidth());
+        rover.moveBackwards(config.getHeight(), config.getWidth(), config.getObstacles());
     }
 }
 

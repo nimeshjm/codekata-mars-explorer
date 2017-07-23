@@ -1,9 +1,9 @@
 package com.codekata.config;
 
+import com.codekata.model.Coordinate;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -12,7 +12,8 @@ public class Config {
 
     private Integer height;
     private Integer width;
-    private List<String> obstacles = new ArrayList<>();
+
+    private List<Coordinate> obstacles;
 
     public Integer getHeight() {
         return height;
@@ -30,7 +31,11 @@ public class Config {
         this.width = width;
     }
 
-    public List<String> getObstacles() {
+    public List<Coordinate> getObstacles() {
         return this.obstacles;
+    }
+
+    public void setObstacles(List<Coordinate> obstacles) {
+        this.obstacles = obstacles;
     }
 }

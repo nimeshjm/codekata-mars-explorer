@@ -21,12 +21,14 @@ import static org.mockito.Mockito.*;
 public class MarsRoverServiceTest {
     private MarsRoverService sut;
     private RoverRepository roverRepository;
+    private Config config;
 
     @Before
     public void setUp() throws Exception {
-        Config config = mock(Config.class);
+        config = mock(Config.class);
         when(config.getHeight()).thenReturn(10);
         when(config.getWidth()).thenReturn(10);
+        when(config.getObstacles()).thenReturn(Arrays.asList(new Coordinate(3,4), new Coordinate(5,3)));
 
         roverRepository = mock(RoverRepository.class);
         CommandParser commandParser = new CommandParser(Arrays.asList(new MoveForwardCommand(config), new MoveBackwardsCommand(config), new TurnRightCommand(), new TurnLeftCommand()));
@@ -225,6 +227,32 @@ public class MarsRoverServiceTest {
         assertEquals((Integer)0, actual.getPosition().getX());
         assertEquals((Integer)3, actual.getPosition().getY());
         assertEquals(Direction.E, actual.getDirection());
+    }
+
+    @Test
+    public void runCommandRoverHitsObstacleReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(3,3), Direction.N));
+        char[] commands = {'f', 'b'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)3, actual.getPosition().getX());
+        assertEquals((Integer)3, actual.getPosition().getY());
+        assertEquals(Direction.N, actual.getDirection());
+        assertTrue(actual.isCrashed());
+    }
+
+    @Test
+    public void runBackwardsCommandRoverHitsObstacleReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(5,4), Direction.N));
+        char[] commands = {'b'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)5, actual.getPosition().getX());
+        assertEquals((Integer)4, actual.getPosition().getY());
+        assertEquals(Direction.N, actual.getDirection());
+        assertTrue(actual.isCrashed());
     }
 
     @Test(expected = InvalidCommandException.class)

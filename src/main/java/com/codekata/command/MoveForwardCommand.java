@@ -21,6 +21,6 @@ public class MoveForwardCommand implements Filter {
 
     @Override
     public void execute(Rover rover) {
-        rover.moveForward(config.getHeight(), config.getWidth());
+        rover.moveForward(config.getHeight(), config.getWidth(), config.getObstacles());
     }
 }
