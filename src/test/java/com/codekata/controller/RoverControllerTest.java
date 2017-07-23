@@ -1,11 +1,13 @@
 package com.codekata.controller;
 
 import com.codekata.command.*;
+import com.codekata.config.Config;
 import com.codekata.model.Coordinate;
 import com.codekata.model.Direction;
 import com.codekata.model.Rover;
 import com.codekata.repository.RoverRepository;
 import com.codekata.service.MarsRoverService;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,12 +28,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 public class RoverControllerTest {
-    private final RoverRepository roverRepository = mock(RoverRepository.class);
-    private CommandParser commandParser = new CommandParser(Arrays.asList(new MoveForwardCommand(), new MoveBackwardsCommand(), new TurnRightCommand(), new TurnLeftCommand()));
-    private final MarsRoverService roverService = new MarsRoverService(roverRepository, commandParser);
-    private final RoverController sut = new RoverController(roverService);
+    private final RoverRepository roverRepository;
+    private final MockMvc mockMvc;
 
-    private final MockMvc mockMvc = standaloneSetup(this.sut).build();
+    public RoverControllerTest() {
+        Config config = mock(Config.class);
+        when(config.getHeight()).thenReturn(10);
+        when(config.getWidth()).thenReturn(10);
+
+        roverRepository = mock(RoverRepository.class);
+        CommandParser commandParser = new CommandParser(Arrays.asList(new MoveForwardCommand(config), new MoveBackwardsCommand(config), new TurnRightCommand(), new TurnLeftCommand()));
+        MarsRoverService roverService = new MarsRoverService(roverRepository, commandParser);
+        RoverController sut = new RoverController(roverService);
+        mockMvc = standaloneSetup(sut).build();
+    }
+
+    @Before
+    public void setUp() throws Exception {
+
+    }
 
     @Test
     public void unknownEndpointIs404() throws Exception {

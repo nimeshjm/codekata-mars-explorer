@@ -1,7 +1,7 @@
 package com.codekata.model;
 
-import com.codekata.command.Filter;
 import com.codekata.command.CommandParser;
+import com.codekata.command.Filter;
 import com.codekata.exception.InvalidCommandException;
 
 public class Rover extends RoverRequest {
@@ -47,22 +47,22 @@ public class Rover extends RoverRequest {
         }
     }
 
-    public void moveForward() {
+    public void moveForward(Integer height, Integer width) {
         Coordinate position = getPosition();
         Direction direction = getDirection();
 
-        int x = position.getX() + direction.getX();
-        int y = position.getY() + direction.getY();
+        int x = wrap(position.getX() + direction.getX(), width);
+        int y = wrap(position.getY() + direction.getY(), height);
 
         setPosition(new Coordinate(x, y));
     }
 
-    public void moveBackwards() {
+    public void moveBackwards(Integer height, Integer width) {
         Coordinate position = getPosition();
         Direction direction = getDirection();
 
-        int x = position.getX() - direction.getX();
-        int y = position.getY() - direction.getY();
+        int x = wrap(position.getX() - direction.getX(), width);
+        int y = wrap(position.getY() - direction.getY(), height);
 
         setPosition(new Coordinate(x, y));
     }
@@ -73,5 +73,15 @@ public class Rover extends RoverRequest {
 
     public void turnLeft() {
         setDirection(getDirection().turnLeft());
+    }
+
+    private Integer wrap(Integer currentPosition, Integer maxPosition){
+        int pos = currentPosition % maxPosition;
+
+        if (pos < 0){
+            pos = maxPosition - 1;
+        }
+
+        return pos;
     }
 }

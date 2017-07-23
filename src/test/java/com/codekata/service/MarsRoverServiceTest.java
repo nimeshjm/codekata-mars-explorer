@@ -1,6 +1,7 @@
 package com.codekata.service;
 
 import com.codekata.command.*;
+import com.codekata.config.Config;
 import com.codekata.exception.InvalidCommandException;
 import com.codekata.model.Coordinate;
 import com.codekata.model.Direction;
@@ -20,12 +21,15 @@ import static org.mockito.Mockito.*;
 public class MarsRoverServiceTest {
     private MarsRoverService sut;
     private RoverRepository roverRepository;
-    private CommandParser commandParser;
 
     @Before
     public void setUp() throws Exception {
+        Config config = mock(Config.class);
+        when(config.getHeight()).thenReturn(10);
+        when(config.getWidth()).thenReturn(10);
+
         roverRepository = mock(RoverRepository.class);
-        commandParser = new CommandParser(Arrays.asList(new MoveForwardCommand(), new MoveBackwardsCommand(), new TurnRightCommand(), new TurnLeftCommand()));
+        CommandParser commandParser = new CommandParser(Arrays.asList(new MoveForwardCommand(config), new MoveBackwardsCommand(config), new TurnRightCommand(), new TurnLeftCommand()));
         sut = new MarsRoverService(roverRepository, commandParser);
     }
 
@@ -125,6 +129,102 @@ public class MarsRoverServiceTest {
         assertEquals((Integer)1, actual.getPosition().getY());
         assertEquals((Integer)1, actual.getPosition().getX());
         assertEquals(Direction.S, actual.getDirection());
+    }
+
+    @Test
+    public void runBackwardsCommandRoverReachesTopEdgeReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,9), Direction.S));
+        char[] commands = {'b'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)1, actual.getPosition().getX());
+        assertEquals((Integer)0, actual.getPosition().getY());
+        assertEquals(Direction.S, actual.getDirection());
+    }
+
+    @Test
+    public void runBackwardsCommandRoverReachesBottomEdgeReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,0), Direction.N));
+        char[] commands = {'b'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)1, actual.getPosition().getX());
+        assertEquals((Integer)9, actual.getPosition().getY());
+        assertEquals(Direction.N, actual.getDirection());
+    }
+
+    @Test
+    public void runBackwardsCommandRoverReachesLeftEdgeReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(0,3), Direction.E));
+        char[] commands = {'b'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)9, actual.getPosition().getX());
+        assertEquals((Integer)3, actual.getPosition().getY());
+        assertEquals(Direction.E, actual.getDirection());
+    }
+
+    @Test
+    public void runBackwardsCommandRoverReachesRightEdgeReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(9,3), Direction.W));
+        char[] commands = {'b'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)0, actual.getPosition().getX());
+        assertEquals((Integer)3, actual.getPosition().getY());
+        assertEquals(Direction.W, actual.getDirection());
+    }
+
+    @Test
+    public void runCommandRoverReachesTopEdgeReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,9), Direction.N));
+        char[] commands = {'f'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)1, actual.getPosition().getX());
+        assertEquals((Integer)0, actual.getPosition().getY());
+        assertEquals(Direction.N, actual.getDirection());
+    }
+
+    @Test
+    public void runCommandRoverReachesBottomEdgeReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,0), Direction.S));
+        char[] commands = {'f'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)1, actual.getPosition().getX());
+        assertEquals((Integer)9, actual.getPosition().getY());
+        assertEquals(Direction.S, actual.getDirection());
+    }
+
+    @Test
+    public void runCommandRoverReachesLeftEdgeReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(0,3), Direction.W));
+        char[] commands = {'f'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)9, actual.getPosition().getX());
+        assertEquals((Integer)3, actual.getPosition().getY());
+        assertEquals(Direction.W, actual.getDirection());
+    }
+
+    @Test
+    public void runCommandRoverReachesRightEdgeReturnsRover() throws Exception, InvalidCommandException {
+        when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(9,3), Direction.E));
+        char[] commands = {'f'};
+
+        Rover actual = sut.Run(1, commands);
+
+        assertEquals((Integer)0, actual.getPosition().getX());
+        assertEquals((Integer)3, actual.getPosition().getY());
+        assertEquals(Direction.E, actual.getDirection());
     }
 
     @Test(expected = InvalidCommandException.class)
