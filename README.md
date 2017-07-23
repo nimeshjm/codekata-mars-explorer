@@ -1,4 +1,6 @@
-1. Visit: https://mars-explorer-counselable-enterclose.cfapps.io/
+Mars Explorer
+---
+1. Visit: https://mars-explorer-counselable-enterclose.cfapps.io/rovers
 
 2. The grid size is configurable in the application.yml file.  
 The grid coordinates are 0 based.
