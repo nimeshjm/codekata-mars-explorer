@@ -14,9 +14,23 @@ The grid coordinates are 0 based.
 
 7. Run 'java -jar target/mars-explorer-0.1.0-SNAPSHOT.jar' to run in standalone mode.  
 
+Sample:
+---
+1. Create a rover  
+POST: https://mars-explorer-counselable-enterclose.cfapps.io/rovers  
+Content-Type: application/json  
+Body: {"position":{"x":0,"y":0},"direction":"N"}  
+
+2. Get a rover
+GET: https://mars-explorer-counselable-enterclose.cfapps.io/rovers/1  
+
+3. Move a rover  
+POST: https://mars-explorer-counselable-enterclose.cfapps.io/rovers/1  
+Content-Type: application/json  
+Body:{"commands": ["f", "b", "r", "f", "l", "b"]}
+
 Todo:
 ---
-
 The following items would need to be implemented to have a production strength API
 * hateoas
 * error handling
