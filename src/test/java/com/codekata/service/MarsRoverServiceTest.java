@@ -21,11 +21,10 @@ import static org.mockito.Mockito.*;
 public class MarsRoverServiceTest {
     private MarsRoverService sut;
     private RoverRepository roverRepository;
-    private Config config;
 
     @Before
     public void setUp() throws Exception {
-        config = mock(Config.class);
+        Config config = mock(Config.class);
         when(config.getHeight()).thenReturn(10);
         when(config.getWidth()).thenReturn(10);
         when(config.getObstacles()).thenReturn(Arrays.asList(new Coordinate(3,4), new Coordinate(5,3)));
@@ -37,14 +36,11 @@ public class MarsRoverServiceTest {
 
     @Test
     public void createIsSuccessful() throws Exception {
-        // arrange
         when(roverRepository.add(any(), any()))
                 .thenReturn(new Rover(1, new Coordinate(1,1), Direction.E));
 
-        // act
-        Rover actual = sut.Create(any(), any());
+        Rover actual = sut.create(any(), any());
 
-        // assert
         assertEquals((Integer)1, actual.getId());
         assertEquals(new Coordinate(1, 1), actual.getPosition());
         assertThat(actual.getDirection(), instanceOf(Direction.class));
@@ -54,7 +50,7 @@ public class MarsRoverServiceTest {
 
     @Test
     public void getAllOnEmptyDatabaseReturnsEmptyList() throws Exception {
-        List<Rover> actual = sut.GetAll();
+        List<Rover> actual = sut.get();
 
         assertEquals(0, actual.size());
     }
@@ -66,14 +62,14 @@ public class MarsRoverServiceTest {
                                     new Rover(1, new Coordinate(1,1), Direction.N),
                                     new Rover(1, new Coordinate(1,1), Direction.W)));
 
-        List<Rover> actual = sut.GetAll();
+        List<Rover> actual = sut.get();
 
         assertEquals(2, actual.size());
     }
 
     @Test
     public void runCommandOnUnknownRoverReturnsMissingRover() throws Exception, InvalidCommandException {
-        Rover actual = sut.Run(1, any());
+        Rover actual = sut.run(1, any());
         assertNull(actual);
     }
 
@@ -82,7 +78,7 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,1), Direction.N));
         char[] commands = {'f'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
         assertNotNull(actual);
     }
@@ -92,10 +88,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,1), Direction.N));
         char[] commands = {'f'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)2, actual.getPosition().getY());
-        assertEquals((Integer)1, actual.getPosition().getX());
+        Coordinate expected = new Coordinate(1, 2);
+        assertEquals(expected, actual.getPosition());
     }
 
     @Test
@@ -103,10 +99,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,1), Direction.W));
         char[] commands = {'b'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)2, actual.getPosition().getX());
-        assertEquals((Integer)1, actual.getPosition().getY());
+        Coordinate expected = new Coordinate(2, 1);
+        assertEquals(expected, actual.getPosition());
     }
 
     @Test
@@ -114,10 +110,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,1), Direction.S));
         char[] commands = {'r'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)1, actual.getPosition().getY());
-        assertEquals((Integer)1, actual.getPosition().getX());
+        Coordinate expected = new Coordinate(1, 1);
+        assertEquals(expected, actual.getPosition());
         assertEquals(Direction.W, actual.getDirection());
     }
 
@@ -126,10 +122,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,1), Direction.W));
         char[] commands = {'l'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)1, actual.getPosition().getY());
-        assertEquals((Integer)1, actual.getPosition().getX());
+        Coordinate expected = new Coordinate(1, 1);
+        assertEquals(expected, actual.getPosition());
         assertEquals(Direction.S, actual.getDirection());
     }
 
@@ -138,10 +134,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,9), Direction.S));
         char[] commands = {'b'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)1, actual.getPosition().getX());
-        assertEquals((Integer)0, actual.getPosition().getY());
+        Coordinate expected = new Coordinate(1, 0);
+        assertEquals(expected, actual.getPosition());
         assertEquals(Direction.S, actual.getDirection());
     }
 
@@ -150,10 +146,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,0), Direction.N));
         char[] commands = {'b'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)1, actual.getPosition().getX());
-        assertEquals((Integer)9, actual.getPosition().getY());
+        Coordinate expected = new Coordinate(1, 9);
+        assertEquals(expected, actual.getPosition());
         assertEquals(Direction.N, actual.getDirection());
     }
 
@@ -162,10 +158,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(0,3), Direction.E));
         char[] commands = {'b'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)9, actual.getPosition().getX());
-        assertEquals((Integer)3, actual.getPosition().getY());
+        Coordinate expected = new Coordinate(9, 3);
+        assertEquals(expected, actual.getPosition());
         assertEquals(Direction.E, actual.getDirection());
     }
 
@@ -174,10 +170,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(9,3), Direction.W));
         char[] commands = {'b'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)0, actual.getPosition().getX());
-        assertEquals((Integer)3, actual.getPosition().getY());
+        Coordinate expected = new Coordinate(0, 3);
+        assertEquals(expected, actual.getPosition());
         assertEquals(Direction.W, actual.getDirection());
     }
 
@@ -186,10 +182,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,9), Direction.N));
         char[] commands = {'f'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)1, actual.getPosition().getX());
-        assertEquals((Integer)0, actual.getPosition().getY());
+        Coordinate expected = new Coordinate(1, 0);
+        assertEquals(expected, actual.getPosition());
         assertEquals(Direction.N, actual.getDirection());
     }
 
@@ -198,10 +194,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,0), Direction.S));
         char[] commands = {'f'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)1, actual.getPosition().getX());
-        assertEquals((Integer)9, actual.getPosition().getY());
+        Coordinate expected = new Coordinate(1, 9);
+        assertEquals(expected, actual.getPosition());
         assertEquals(Direction.S, actual.getDirection());
     }
 
@@ -210,10 +206,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(0,3), Direction.W));
         char[] commands = {'f'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)9, actual.getPosition().getX());
-        assertEquals((Integer)3, actual.getPosition().getY());
+        Coordinate expected = new Coordinate(9, 3);
+        assertEquals(expected, actual.getPosition());
         assertEquals(Direction.W, actual.getDirection());
     }
 
@@ -222,10 +218,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(9,3), Direction.E));
         char[] commands = {'f'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)0, actual.getPosition().getX());
-        assertEquals((Integer)3, actual.getPosition().getY());
+        Coordinate expected = new Coordinate(0, 3);
+        assertEquals(expected, actual.getPosition());
         assertEquals(Direction.E, actual.getDirection());
     }
 
@@ -234,10 +230,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(3,3), Direction.N));
         char[] commands = {'f', 'b'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)3, actual.getPosition().getX());
-        assertEquals((Integer)3, actual.getPosition().getY());
+        Coordinate expected = new Coordinate(3, 3);
+        assertEquals(expected, actual.getPosition());
         assertEquals(Direction.N, actual.getDirection());
         assertTrue(actual.isCrashed());
     }
@@ -247,10 +243,10 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(5,4), Direction.N));
         char[] commands = {'b'};
 
-        Rover actual = sut.Run(1, commands);
+        Rover actual = sut.run(1, commands);
 
-        assertEquals((Integer)5, actual.getPosition().getX());
-        assertEquals((Integer)4, actual.getPosition().getY());
+        Coordinate expected = new Coordinate(5, 4);
+        assertEquals(expected, actual.getPosition());
         assertEquals(Direction.N, actual.getDirection());
         assertTrue(actual.isCrashed());
     }
@@ -260,6 +256,6 @@ public class MarsRoverServiceTest {
         when(roverRepository.get(any())).thenReturn(new Rover(1, new Coordinate(1,1), Direction.N));
         char[] commands = {'a'};
 
-        sut.Run(1, commands);
+        sut.run(1, commands);
     }
 }

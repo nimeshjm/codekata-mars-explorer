@@ -23,12 +23,12 @@ public class RoverController {
 
     @RequestMapping(value = "/rovers", method = RequestMethod.GET)
     public List<Rover> ListRovers() {
-        return roverService.GetAll();
+        return roverService.get();
     }
 
     @RequestMapping(value = "/rovers/{id}", method = RequestMethod.GET)
     public ResponseEntity<Rover> GetRover(@PathVariable Integer id) {
-        return Optional.ofNullable(roverService.Get(id))
+        return Optional.ofNullable(roverService.get(id))
                 .map(r -> ResponseEntity.ok().body(r))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -37,7 +37,7 @@ public class RoverController {
     public ResponseEntity<Rover> RunCommandsOnRover(@PathVariable Integer id, @RequestBody CommandsRequest request) {
         Rover rover;
         try {
-            rover = roverService.Run(id, request.getCommands());
+            rover = roverService.run(id, request.getCommands());
         } catch (InvalidCommandException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -49,7 +49,7 @@ public class RoverController {
 
     @RequestMapping(value = "/rovers", method = RequestMethod.POST)
     public ResponseEntity<Rover> CreateRover(@RequestBody RoverRequest request) {
-        Rover rover = roverService.Create(request.getPosition(), request.getDirection());
+        Rover rover = roverService.create(request.getPosition(), request.getDirection());
         return new ResponseEntity<>(rover, HttpStatus.CREATED);
     }
 }

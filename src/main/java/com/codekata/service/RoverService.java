@@ -8,11 +8,11 @@ import com.codekata.model.Rover;
 import java.util.List;
 
 public interface RoverService {
-    Rover Create(Coordinate Position, Direction initialDirection);
+    Rover create(Coordinate Position, Direction initialDirection);
 
-    List<Rover> GetAll();
+    List<Rover> get();
 
-    Rover Get(Integer id);
+    Rover get(Integer id);
 
-    Rover Run(Integer id, char[] commands) throws InvalidCommandException;
+    Rover run(Integer id, char[] commands) throws InvalidCommandException;
 }

@@ -23,23 +23,23 @@ public class MarsRoverService implements RoverService {
     }
 
     @Override
-    public Rover Create(Coordinate Position, Direction initialDirection){
+    public Rover create(Coordinate Position, Direction initialDirection){
         return roverRepository.add(Position, initialDirection);
     }
 
     @Override
-    public List<Rover> GetAll() {
+    public List<Rover> get() {
         return roverRepository.get();
     }
 
     @Override
-    public Rover Get(Integer id) {
+    public Rover get(Integer id) {
         return roverRepository.get(id);
     }
 
     @Override
-    public Rover Run(Integer id, char[] commands) throws InvalidCommandException {
-        Rover rover = Get(id);
+    public Rover run(Integer id, char[] commands) throws InvalidCommandException {
+        Rover rover = get(id);
 
         if (rover == null)
         {

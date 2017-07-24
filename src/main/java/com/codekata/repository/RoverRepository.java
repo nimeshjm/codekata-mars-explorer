@@ -11,5 +11,5 @@ public interface RoverRepository {
 
     List<Rover> get();
 
-    Rover add(Coordinate Position, Direction initialDirection);
+    Rover add(Coordinate position, Direction initialDirection);
 }
