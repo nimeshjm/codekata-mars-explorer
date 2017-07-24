@@ -19,24 +19,8 @@ public class Rover extends RoverRequest {
         return id;
     }
 
-    public Coordinate getPosition() {
-        return super.getPosition();
-    }
-
-    public Direction getDirection() {
-        return super.getDirection();
-    }
-
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public void setPosition(Coordinate Position) {
-        super.setPosition(Position);
-    }
-
-    public void setDirection(Direction direction) {
-        super.setDirection(direction);
     }
 
     public void runCommands(CommandParser commandParser, char[] commands) throws InvalidCommandException {
